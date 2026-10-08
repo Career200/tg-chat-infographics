@@ -37,11 +37,12 @@ function bindIntake({load, summary, onLoaded}){
       $('dropStatus').textContent = DROP_IDLE;
     }
   }
-  $('file').addEventListener('change', e => handleFile(e.target.files[0]));
+  $('file').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; handleFile(f); }); // reset so picking the same file again still fires change
   const drop = $('drop');
   ['dragenter','dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
   ['dragleave','drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
   drop.addEventListener('drop', e => handleFile(e.dataTransfer.files[0]));
+  ['dragover','drop'].forEach(t => window.addEventListener(t, e => e.preventDefault()));
 }
 
 // Copies #out to the clipboard; falls back to selecting the text.
