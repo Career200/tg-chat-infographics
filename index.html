@@ -1,0 +1,722 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Геном общения</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: one narrow lab-report column, four steps top to bottom; two "strands" (friend / birthday) are colour-coded everywhere */
+:root{
+  --bg:#F1F4F2; --surface:#FFFFFF; --ink:#17201C; --muted:#5B6A63; --line:#D7DED9; --cell:#E6EBE8;
+  --friend:#1C7A6F; --bday:#B3306A; --accent:#B3306A; --danger:#B4321F;
+  --m-text:#A3AEA8; --m-photo:#3C81A0; --m-voice:#CF8A2C; --m-vnote:#8A5BC1; --m-sticker:#B3306A; --m-gif:#5E9F58; --m-video:#2E5C89; --m-other:#7E8A84;
+  --font-display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --font-body:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#111614; --surface:#18201C; --ink:#E4EBE7; --muted:#93A29A; --line:#2B3530; --cell:#222B27;
+  --friend:#4FB9AA; --bday:#EC6FA2; --accent:#EC6FA2; --danger:#F07A63;
+  --m-text:#5E6B65; --m-photo:#5DA4C4; --m-voice:#E3A24A; --m-vnote:#A983DB; --m-sticker:#EC6FA2; --m-gif:#7DBF77; --m-video:#5F8CC0; --m-other:#45514B;
+  color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#111614; --surface:#18201C; --ink:#E4EBE7; --muted:#93A29A; --line:#2B3530; --cell:#222B27;
+  --friend:#4FB9AA; --bday:#EC6FA2; --accent:#EC6FA2; --danger:#F07A63;
+  --m-text:#5E6B65; --m-photo:#5DA4C4; --m-voice:#E3A24A; --m-vnote:#A983DB; --m-sticker:#EC6FA2; --m-gif:#7DBF77; --m-video:#5F8CC0; --m-other:#45514B;
+  color-scheme:dark; }
+
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding:40px 16px 64px;display:flex;flex-direction:column;gap:40px}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--font-display);font-weight:700;font-size:clamp(30px,6vw,44px);line-height:1.1;margin-top:8px}
+h1 .f{color:var(--friend)} h1 .b{color:var(--bday)}
+.lede{margin-top:14px;max-width:62ch;color:var(--muted)}
+.head{display:flex;flex-direction:column}
+
+.step{display:flex;flex-direction:column;gap:16px}
+.step h2{font-size:20px;font-weight:600;display:flex;align-items:center;gap:12px}
+.n{font-family:var(--font-mono);font-size:13px;font-weight:500;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--ink);display:inline-grid;place-items:center;flex:none}
+
+.howto{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px;max-width:64ch}
+.howto b{font-weight:600}
+.hint{font-size:14px;color:var(--muted);max-width:64ch}
+kbd{font-family:var(--font-mono);font-size:13px;background:var(--cell);border-radius:4px;padding:1px 6px}
+
+.drop{display:flex;flex-direction:column;gap:4px;align-items:flex-start;padding:28px 24px;border:1.5px dashed var(--muted);border-radius:10px;background:var(--surface);cursor:pointer;transition:border-color .15s,background .15s}
+.drop:hover,.drop.over{border-color:var(--accent);border-style:solid}
+.drop:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.drop-main{font-weight:600}
+.drop-sub{font-size:14px;color:var(--muted)}
+.error{color:var(--danger);font-weight:500;max-width:64ch}
+
+.sample-note{font-size:14px;padding:10px 14px;border-left:3px solid var(--accent);background:var(--surface);color:var(--muted)}
+.who{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;font-size:15px}
+.who legend{font-weight:600;padding:0;margin-bottom:6px;width:100%}
+.who fieldset{border:0;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 20px}
+.who label{display:flex;gap:8px;align-items:center;cursor:pointer}
+
+.report{display:flex;flex-direction:column;gap:28px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.kpi{background:var(--surface);padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.kpi .v{font-family:var(--font-mono);font-size:22px;font-weight:500;font-variant-numeric:tabular-nums}
+.kpi .l{font-size:13px;color:var(--muted)}
+
+.block{display:flex;flex-direction:column;gap:12px}
+.block h3{font-family:var(--font-mono);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+.strand{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--cell)}
+.strand .f{background:var(--friend)} .strand .b{background:var(--bday)}
+.legend2{display:flex;justify-content:space-between;gap:12px;font-size:14px;flex-wrap:wrap}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:baseline}
+.dot.f{background:var(--friend)} .dot.b{background:var(--bday)}
+
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line)}
+th{font-weight:500;color:var(--muted);font-size:13px}
+td.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;text-align:right}
+th.num{text-align:right}
+
+.gel{display:grid;gap:3px}
+.gel.h{grid-template-columns:repeat(24,minmax(0,1fr))}
+.gel.w{grid-template-columns:repeat(7,minmax(0,1fr));max-width:340px}
+.gel .c{height:34px;border-radius:3px}
+.gel .lab{font-family:var(--font-mono);font-size:11px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
+.facts{display:flex;flex-wrap:wrap;gap:6px 24px;font-size:15px}
+.facts b{font-family:var(--font-mono);font-weight:500}
+
+.mix{display:flex;height:22px;border-radius:5px;overflow:hidden;background:var(--cell)}
+.mix span{display:block;height:100%}
+.pick{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:15px;cursor:pointer}
+.pick:hover:not(:disabled){border-color:var(--muted)}
+.pick[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.pick[aria-pressed="true"] .cnt{color:var(--bg);opacity:.7}
+.pick:disabled{opacity:.4;cursor:default}
+.side.meme{padding:20px;gap:18px}
+.meme-lead{display:flex;flex-direction:column;gap:2px}
+.meme-lead b{font-family:var(--font-mono);font-weight:500;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.meme-sub{font-size:14px;color:var(--muted)}
+.outcomes{display:flex;flex-direction:column;gap:14px}
+.oc{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;font-size:14px;align-items:baseline}
+.oc b{font-family:var(--font-mono);font-weight:500;font-variant-numeric:tabular-nums}
+.meter{grid-column:1/-1;height:6px;border-radius:3px;background:var(--cell);overflow:hidden}
+.meter span{display:block;height:100%}
+.more{font-size:14px;padding:6px 14px}
+.mix.thin{height:12px;border-radius:6px}
+.mix-legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px}
+.mix-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+.mix-legend b{font-family:var(--font-mono);font-weight:500;margin-left:4px}
+
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.side{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.side-h{font-size:14px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 6px 6px 12px;border-radius:999px;background:var(--cell);font-size:15px}
+.chip .g{font-size:20px;line-height:1}
+.chip .cnt{font-family:var(--font-mono);font-size:13px;color:var(--muted)}
+.x{border:0;background:transparent;color:var(--muted);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:16px;line-height:1;display:grid;place-items:center}
+.x:hover{background:var(--line);color:var(--ink)}
+.x:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.empty{font-size:14px;color:var(--muted)}
+.removed{font-size:14px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.restore{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:2px 10px;font:inherit;font-size:13px;cursor:pointer}
+.restore:hover{border-color:var(--muted)}
+
+.send{display:flex;flex-direction:column;gap:12px}
+.send label{font-weight:600;font-size:15px}
+.send input{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);max-width:360px}
+.send textarea{font-family:var(--font-mono);font-size:12px;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);width:100%;box-sizing:border-box;resize:vertical;min-height:110px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{font:inherit;font-weight:600;padding:11px 20px;border-radius:8px;border:0;background:var(--ink);color:var(--bg);cursor:pointer}
+.btn:hover{opacity:.88}
+.status{font-size:14px;color:var(--muted)}
+.locked{font-size:15px;color:var(--muted)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<main class="wrap">
+  <header class="head">
+    <p class="eyebrow">Открытка на день рождения</p>
+    <h1>Геном <span class="f">обще</span><span class="b">ния</span></h1>
+    <p class="lede">Загрузи выгрузку вашего чата с именинником. Страница посчитает статистику прямо в твоём браузере, переписка никуда не отправляется. На выходе получится короткий набор цифр, который ты сам перешлёшь организатору.</p>
+  </header>
+
+  <section class="step" aria-labelledby="s1">
+    <h2 id="s1"><span class="n">1</span>Выгрузи чат с именинником</h2>
+    <ol class="howto">
+      <li>Открой <b>Telegram Desktop</b> на компьютере. С телефона выгрузить нельзя.</li>
+      <li>Зайди в личный чат с именинником, нажми <kbd>⋮</kbd> в правом верхнем углу и выбери <b>«Экспорт истории чата»</b>.</li>
+      <li>Сними все галочки: фото, видео, голосовые, стикеры и прочее. Нужен только текст, так выгрузка займёт секунды.</li>
+      <li>Внизу выбери формат <b>«Машиночитаемый JSON»</b> и нажми «Экспортировать».</li>
+      <li>В открывшейся папке будет файл <kbd>result.json</kbd>.</li>
+    </ol>
+    <p class="hint">Если на Mac такого пункта нет, поставь Telegram Desktop с desktop.telegram.org: у версии из App Store экспорт устроен иначе.</p>
+  </section>
+
+  <section class="step" aria-labelledby="s2">
+    <h2 id="s2"><span class="n">2</span>Загрузи result.json</h2>
+    <label class="drop" id="drop" for="file">
+      <input type="file" id="file" accept=".json,application/json">
+      <span class="drop-main">Перетащи файл сюда или нажми, чтобы выбрать</span>
+      <span class="drop-sub" id="dropStatus">Файл читается только на этом компьютере</span>
+    </label>
+    <p class="error" id="err" hidden></p>
+  </section>
+
+  <section class="step" aria-labelledby="s3">
+    <h2 id="s3"><span class="n">3</span>Проверь, что уходит</h2>
+    <p class="sample-note" id="sampleNote">Сейчас показан пример на выдуманной переписке. Загрузи свою выгрузку, и здесь появятся ваши цифры.</p>
+    <div class="who" id="who" hidden></div>
+    <div class="report" id="report"></div>
+  </section>
+
+  <section class="step" aria-labelledby="s4">
+    <h2 id="s4"><span class="n">4</span>Отправь организатору</h2>
+    <p class="locked" id="sendLocked">Сначала загрузи свою выгрузку на шаге 2.</p>
+    <div class="send" id="sendBox" hidden>
+      <label for="fname">Как подписать тебя в открытке</label>
+      <input id="fname" type="text" autocomplete="off">
+      <label for="out">Твой геном</label>
+      <textarea id="out" readonly rows="6"></textarea>
+      <div class="row">
+        <button class="btn" id="copy" type="button">Скопировать</button>
+        <span class="status" id="copyStatus" aria-live="polite"></span>
+      </div>
+      <p class="hint">Вставь скопированное в личное сообщение организатору. Там только цифры, эмодзи и три слова, которые ты видишь выше.</p>
+    </div>
+  </section>
+</main>
+
+<script id="core">
+/* ---------- analysis core (no DOM) ---------- */
+const GAP_SEC = 4 * 3600; // a pause longer than this starts a new conversation
+
+const STOP_WORDS = `и в во не что он на я с со как а то все она так его но да ты к у же вы за бы по только ее мне было вот от меня еще нет о из ему теперь когда даже ну вдруг ли если уже или ни быть был него до вас нибудь опять уж вам ведь там потом себя ничего ей может они тут где есть надо ней для мы тебя их чем была сам чтоб без будто чего раз тоже себе под будет ж тогда кто этот того потому этого какой совсем ним здесь этом один почти мой тем чтобы нее сейчас были куда зачем всех никогда можно при наконец два об другой хоть после над больше тот через эти нас про всего них какая много разве три эту моя впрочем хорошо свою этой перед иногда лучше чуть том нельзя такой им более всегда конечно всю между это тебе тобой мной мною нам вами ими свой своя свои своих твой твоя твои твое твоем наш наша наши ваш ваша который которая которые которых просто очень типа короче вообще кстати ладно давай давайте сегодня завтра вчера щас ага угу неа окей ок норм нормально привет пока спасибо пожалуйста блин вроде прям прямо чет чето ваще такое такая такие этих этим эта эти тоже нужно знаю думаю хочу могу можешь будешь буду сделать делать сказал сказала говорит говорю мог могла хотел хотела было будут всё еще ещё либо пусть кажется точно вообщем вобщем нету есть какие какой каких какое тебя тебе мне меня the and you for that this with are was not but have just what its i'm dont don't yes okay lol`.split(/\s+/);
+
+const RV = /^(.*?[аеиоуыэюя])(.*)$/;
+const PG = /((ив|ивши|ившись|ыв|ывши|ывшись)|((?<=[ая])(в|вши|вшись)))$/;
+const REF = /(с[яь])$/;
+const ADJ = /(ее|ие|ые|ое|ими|ыми|ей|ий|ый|ой|ем|им|ым|ом|его|ого|ему|ому|их|ых|ую|юю|ая|яя|ою|ею)$/;
+const PART = /((ивш|ывш|ующ)|((?<=[ая])(ем|нн|вш|ющ|щ)))$/;
+const VERB = /((ила|ыла|ена|ейте|уйте|ите|или|ыли|ей|уй|ил|ыл|им|ым|ен|ило|ыло|ено|ят|ует|уют|ит|ыт|ены|ить|ыть|ишь|ую|ю)|((?<=[ая])(ла|на|ете|йте|ли|й|л|ем|н|ло|но|ет|ют|ны|ть|ешь|нно)))$/;
+const NOUN = /(а|ев|ов|ие|ье|е|иями|ями|ами|еи|ии|и|ией|ей|ой|ий|й|иям|ям|ием|ем|ам|ом|о|у|ах|иях|ях|ы|ь|ию|ью|ю|ия|ья|я)$/;
+const DER = /[^аеиоуыэюя][аеиоуыэюя]+[^аеиоуыэюя]+[аеиоуыэюя].*(?<=о)сть?$/;
+
+// Russian Porter stemmer
+function stem(w){
+  const m = RV.exec(w); if(!m) return w;
+  const pre = m[1]; let rv = m[2], t;
+  t = rv.replace(PG, '');
+  if(t === rv){
+    rv = rv.replace(REF, '');
+    t = rv.replace(ADJ, '');
+    if(t !== rv){ rv = t.replace(PART, ''); }
+    else { t = rv.replace(VERB, ''); rv = (t === rv) ? rv.replace(NOUN, '') : t; }
+  } else rv = t;
+  rv = rv.replace(/и$/, '');
+  if(DER.test(rv)) rv = rv.replace(/ость?$/, '');
+  t = rv.replace(/ь$/, '');
+  if(t !== rv) rv = t; else { rv = rv.replace(/ейше?$/, ''); rv = rv.replace(/нн$/, 'н'); }
+  return pre + rv;
+}
+const isCyr = w => /[а-я]/.test(w);
+const keyOf = w => isCyr(w) ? stem(w) : w;
+const STOP = new Set(STOP_WORDS.map(w => w.replace(/ё/g, 'е')));
+const STOP_KEYS = new Set([...STOP].filter(w => w.length >= 3).map(keyOf));
+
+const URL_RE = /https?:\/\/\S+|www\.\S+/g;
+const LAUGH = /^(а?(х+а+)+х*|(х+е+)+х*|(х+и+)+х*)$/;
+const PICTO = /\p{Extended_Pictographic}/u;
+const SEG = (typeof Intl !== 'undefined' && Intl.Segmenter) ? new Intl.Segmenter('ru', {granularity:'grapheme'}) : null;
+
+function textOf(m){
+  const t = m.text;
+  if(typeof t === 'string') return t;
+  if(!Array.isArray(t)) return '';
+  return t.map(x => typeof x === 'string' ? x
+    : (['link','mention','email','phone','bot_command','code','pre'].includes(x.type) ? ' ' : (x.text || ''))).join('');
+}
+function classify(m){
+  switch(m.media_type){
+    case 'sticker': return 'sticker';
+    case 'voice_message': return 'voice';
+    case 'video_message': return 'videoNote';
+    case 'animation': return 'gif';
+    case 'video_file': return 'video';
+    case 'audio_file': return 'audio';
+  }
+  if(m.photo) return 'photo';
+  if(m.file || m.media_type) return 'file';
+  if(m.poll || m.location_information || m.contact_information || m.place_name) return 'other';
+  return 'text';
+}
+function bump(map, key, display){ const v = map.get(key); if(v) v.n++; else map.set(key, {n:1, d:display}); }
+const normE = e => e.replace(/️/g, '');
+function emojiScan(t, map){
+  if(!PICTO.test(t)) return;
+  if(SEG){ for(const {segment:g} of SEG.segment(t)) if(PICTO.test(g)) bump(map, normE(g), g); }
+  else { for(const g of t.match(/\p{Extended_Pictographic}/gu) || []) bump(map, normE(g), g); }
+}
+function wordScan(t, words, nameKeys){
+  const ms = t.toLowerCase().replace(URL_RE, ' ').replace(/@\w+/g, ' ').match(/[a-zа-яё]+/g);
+  if(!ms) return;
+  for(let w of ms){
+    w = w.replace(/ё/g, 'е');
+    if(w.length < 3) continue;
+    let k;
+    if(LAUGH.test(w)){ w = 'ахах'; k = 'ахах'; }
+    else { if(STOP.has(w)) continue; k = keyOf(w); }
+    if(k.length < 2 || STOP_KEYS.has(k) || nameKeys.has(k)) continue;
+    let v = words.get(k);
+    if(!v){ v = {n:0, forms:new Map()}; words.set(k, v); }
+    v.n++; v.forms.set(w, (v.forms.get(w) || 0) + 1);
+  }
+}
+function median(a){ if(!a.length) return 0; const s = Float64Array.from(a).sort(); const h = s.length >> 1; return s.length % 2 ? s[h] : (s[h-1] + s[h]) / 2; }
+const r2 = x => Math.round(x * 100) / 100;
+const r1 = x => Math.round(x * 10) / 10;
+function topList(map, k){ return [...map.entries()].sort((a,b) => b[1].n - a[1].n).slice(0, k).map(([key, v]) => ({key, d:v.d, n:v.n})); }
+
+class ChatError extends Error { constructor(code){ super(code); this.code = code; } }
+
+const authorId = m => m.from_id || ('name:' + (m.from || '?'));
+
+// Step A: validate the export and find who is who
+function inspect(data){
+  if(data && data.chats && Array.isArray(data.chats.list)) throw new ChatError('full');
+  if(!data || !Array.isArray(data.messages)) throw new ChatError('format');
+  if(data.type && !['personal_chat','bot_chat'].includes(data.type)) throw new ChatError('group');
+  const authors = new Map();
+  for(const m of data.messages){
+    if(m.type !== 'message') continue;
+    const id = authorId(m);
+    const a = authors.get(id);
+    if(a) a.n++; else authors.set(id, {id, name:m.from || 'Без имени', n:1});
+  }
+  if(authors.size < 2) throw new ChatError('oneSide');
+  const list = [...authors.values()].sort((a,b) => b.n - a.n).slice(0, 2);
+  const byChat = data.id != null ? list.find(a => a.id === 'user' + data.id) : null;
+  return {authors:list, guess:(byChat || list[1]).id};
+}
+
+// Step B: crunch numbers for a chosen birthday person
+function compute(data, bId){
+  const mk = () => ({n:0, lens:[], starts:0, replies:[], emoji:new Map(), stick:new Map()});
+  const S = {f:mk(), b:mk()};
+  const hours = Array(24).fill(0), wd = Array(7).fill(0), days = new Set(), months = new Map();
+  const media = {text:0, photo:0, voice:0, videoNote:0, sticker:0, gif:0, video:0, audio:0, file:0, other:0};
+  const words = new Map();
+  const nameKeys = new Set();
+  const names = [data.name || ''];
+  for(const m of data.messages) if(m.type === 'message' && m.from) names.push(m.from);
+  for(const n of new Set(names)) for(let w of (n.toLowerCase().match(/[a-zа-яё]+/g) || [])){ w = w.replace(/ё/g,'е'); if(w.length >= 2) nameKeys.add(keyOf(w)); }
+
+  let total = 0, convos = 0, calls = 0, callSec = 0, prevTs = null, prevSide = null, first = null, last = null;
+  // conversations opened with a picture / video / gif: did the other side engage?
+  const mkMs = () => ({count:0, ignored:0, oneReply:0, continued:0});
+  const memeAcc = {f:mkMs(), b:mkMs()}, textAcc = {count:0, continued:0};
+  let cur = null;
+  const closeConvo = () => {
+    if(!cur) return;
+    if(cur.media){
+      const a = memeAcc[cur.side]; a.count++;
+      if(cur.switches === 0) a.ignored++; else if(cur.switches === 1) a.oneReply++; else a.continued++;
+    } else if(cur.text){
+      textAcc.count++; if(cur.switches >= 2) textAcc.continued++;
+    }
+  };
+  for(const m of data.messages){
+    if(m.type === 'service'){
+      if(m.action === 'phone_call' && m.duration_seconds > 0){ calls++; callSec += m.duration_seconds; }
+      continue;
+    }
+    if(m.type !== 'message') continue;
+    const side = authorId(m) === bId ? 'b' : 'f';
+    const s = S[side]; s.n++; total++;
+    const ds = m.date || '', day = ds.slice(0, 10), h = parseInt(ds.slice(11, 13), 10);
+    if(day.length === 10){
+      days.add(day);
+      if(!first || day < first) first = day;
+      if(!last || day > last) last = day;
+      const mo = day.slice(0, 7); months.set(mo, (months.get(mo) || 0) + 1);
+      wd[(new Date(day + 'T00:00:00Z').getUTCDay() + 6) % 7]++;
+    }
+    if(h >= 0 && h < 24) hours[h]++;
+    const ts = m.date_unixtime ? +m.date_unixtime : Date.parse(ds) / 1000;
+    const kind = classify(m); media[kind]++;
+    if(prevTs === null || ts - prevTs > GAP_SEC){
+      s.starts++; convos++;
+      closeConvo();
+      cur = {side, media:MEDIA_START.has(kind), text:kind === 'text', switches:0, last:side};
+    } else {
+      if(side !== prevSide) s.replies.push((ts - prevTs) / 60);
+      if(side !== cur.last){ cur.switches++; cur.last = side; }
+    }
+    prevTs = ts; prevSide = side;
+
+    if(kind === 'sticker' && m.sticker_emoji) bump(s.stick, normE(m.sticker_emoji), m.sticker_emoji);
+    if(m.forwarded_from) continue;
+    const t = textOf(m); if(!t || !t.trim()) continue;
+    s.lens.push([...t].length);
+    emojiScan(t, s.emoji);
+    wordScan(t, words, nameKeys);
+  }
+
+  closeConvo();
+  const memeOut = k => { const a = memeAcc[k], st = S[k].starts;
+    return {count:a.count, ofStarts:st ? r2(a.count / st) : 0,
+      ignored:a.count ? r2(a.ignored / a.count) : 0, oneReply:a.count ? r2(a.oneReply / a.count) : 0, continued:a.count ? r2(a.continued / a.count) : 0}; };
+  const dn = [...days].map(d => Date.UTC(+d.slice(0,4), +d.slice(5,7) - 1, +d.slice(8,10)) / 864e5).sort((a,b) => a - b);
+  let streak = 0, run = 0, prev = null;
+  for(const x of dn){ run = (prev !== null && x - prev === 1) ? run + 1 : 1; if(run > streak) streak = run; prev = x; }
+  let peakMonth = null, peakN = 0;
+  for(const [mo, n] of months) if(n > peakN){ peakN = n; peakMonth = mo; }
+
+  const side = k => { const s = S[k]; return {
+    messages:s.n, share:total ? r2(s.n / total) : 0, medianLen:Math.round(median(s.lens)),
+    startsConvos:convos ? r2(s.starts / convos) : 0, medianReplyMin:r1(median(s.replies)) }; };
+  const wordList = [...words.entries()].sort((a,b) => b[1].n - a[1].n).slice(0, 120).map(([key, v]) => {
+    let best = '', bn = 0; for(const [f, n] of v.forms) if(n > bn){ bn = n; best = f; }
+    return {key, d:best, n:v.n};
+  });
+  return {
+    total, convos, first, last, activeDays:days.size, streak, peakMonth, peakN,
+    calls, callMin:Math.round(callSec / 60),
+    sides:{friend:side('f'), birthday:side('b')},
+    hours, weekdays:wd,
+    nightShare:total ? r2(hours.slice(0, 6).reduce((a,b) => a + b, 0) / total) : 0,
+    medianReplyMin:r1(median(S.f.replies.concat(S.b.replies))),
+    media,
+    memeStarts:{friend:memeOut('f'), birthday:memeOut('b')},
+    textStartsContinued:textAcc.count ? r2(textAcc.continued / textAcc.count) : 0,
+    cand:{ ef:topList(S.f.emoji, 15), eb:topList(S.b.emoji, 15), sf:topList(S.f.stick, 15), sb:topList(S.b.stick, 15), words:wordList }
+  };
+}
+
+const MEDIA_START = new Set(['photo','video','gif']);
+const pick = (list, excl, k = 3) => list.filter(x => !excl.has(x.key)).slice(0, k);
+
+// Step C: the contract that goes to the organiser
+const PICK_SHOW = 20, PICK_MAX = 5;
+function buildGenome(st, excl, friendName, picked = new Set()){
+  const media = {}; for(const k in st.media) media[k] = st.total ? Math.round(st.media[k] / st.total * 1000) / 1000 : 0;
+  const pairs = (list, ex) => pick(list, ex).map(x => [x.d, x.n]);
+  return {
+    version:1,
+    friend:friendName,
+    period:{from:st.first, to:st.last},
+    totals:{messages:st.total, activeDays:st.activeDays, longestStreak:st.streak, conversations:st.convos},
+    peakMonth:st.peakMonth,
+    calls:{count:st.calls, minutes:st.callMin},
+    bySide:{
+      friend:{share:st.sides.friend.share, medianLen:st.sides.friend.medianLen, startsConvos:st.sides.friend.startsConvos, medianReplyMin:st.sides.friend.medianReplyMin},
+      birthday:{share:st.sides.birthday.share, medianLen:st.sides.birthday.medianLen, startsConvos:st.sides.birthday.startsConvos, medianReplyMin:st.sides.birthday.medianReplyMin}
+    },
+    hours:st.hours, weekdays:st.weekdays, nightShare:st.nightShare,
+    medianReplyMin:st.medianReplyMin,
+    media,
+    memeStarts:st.memeStarts,
+    textStartsContinued:st.textStartsContinued,
+    emoji:{friend:pairs(st.cand.ef, excl.ef), birthday:pairs(st.cand.eb, excl.eb)},
+    stickerEmoji:{friend:pairs(st.cand.sf, excl.sf), birthday:pairs(st.cand.sb, excl.sb)},
+    topWords:pick(st.cand.words, excl.words).map(x => x.d),
+    pickedWords:st.cand.words.filter(x => picked.has(x.key) && !excl.words.has(x.key)).map(x => [x.d, x.n])
+  };
+}
+
+// Invented chat used for the first view
+function makeSample(){
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const any = a => a[Math.floor(rnd() * a.length)];
+  const vocab = ['шавуха','созвон','кринж','катка','дедлайн','электричка','пицца','котик','рофл','баня','кино','спортзал','самокат','тарантино','хинкали','вайб','бургер','сериал','концерт','дача','шаурмичная','ипотека','бабушка','гитара'];
+  const filler = ['ну','да','это','просто','короче','вообще','там','я','ты','вечером','давай','может','пойдём','надо','сегодня','ахаха'];
+  const emoF = ['😂','😂','🔥','👍','❤️','😭'], emoB = ['😂','😂','😂','🤡','🙃','❤️','😎'];
+  const stF = ['🐸','👍','🔥','😴'], stB = ['😎','🙃','🤝','😎','🐸'];
+  const hoursPool = [9,11,13,14,17,18,19,20,20,21,21,22,22,23,23,0,0,1,2];
+  const fmt = t => new Date(t * 1000).toISOString().slice(0, 19);
+  const msgs = []; let id = 1;
+  let t = Date.UTC(2023, 2, 4, 20) / 1000; const end = Date.UTC(2026, 9, 6) / 1000;
+  while(t < end){
+    let side = rnd() < 0.58 ? 1 : 2;
+    const len = 2 + Math.floor(rnd() * 16);
+    for(let i = 0; i < len; i++){
+      const m = {id:id++, type:'message', date:fmt(t), date_unixtime:String(Math.floor(t)),
+        from:side === 1 ? 'Аня' : 'Именинник', from_id:'user' + side, text:''};
+      const r = (i === 0 && rnd() < 0.22) ? 0.13 : rnd(); // some conversations open with a meme
+      if(r < 0.08){ m.media_type = 'sticker'; m.sticker_emoji = any(side === 1 ? stF : stB); m.file = '(File not included)'; }
+      else if(r < 0.12){ m.media_type = 'voice_message'; m.file = '(File not included)'; }
+      else if(r < 0.15){ m.photo = '(File not included)'; }
+      else if(r < 0.16){ m.media_type = 'video_message'; m.file = '(File not included)'; }
+      else if(r < 0.18){ m.media_type = 'animation'; m.file = '(File not included)'; }
+      else {
+        const n = 1 + Math.floor(rnd() * (side === 1 ? 7 : 11)); const ws = [];
+        for(let j = 0; j < n; j++) ws.push(rnd() < 0.3 ? any(vocab) : any(filler));
+        if(rnd() < 0.28) ws.push(any(side === 1 ? emoF : emoB));
+        m.text = ws.join(' ');
+      }
+      msgs.push(m);
+      t += 20 + rnd() * 400;
+      if(rnd() < 0.55) side = 3 - side;
+    }
+    if(rnd() < 0.04) msgs.push({id:id++, type:'service', date:fmt(t), date_unixtime:String(Math.floor(t)), action:'phone_call', duration_seconds:Math.floor(120 + rnd() * 2400)});
+    const day = Math.floor(t / 86400) + 1 + Math.floor(rnd() * 2.2);
+    t = day * 86400 + any(hoursPool) * 3600 + rnd() * 3000;
+  }
+  return {name:'Именинник', type:'personal_chat', id:2, messages:msgs};
+}
+</script>
+
+<script>
+/* ---------- UI ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtN = n => n.toLocaleString('ru-RU');
+const fmtMonth = ym => { if(!ym) return '—'; const [y, m] = ym.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, 1)).toLocaleDateString('ru-RU', {month:'short', year:'numeric', timeZone:'UTC'}).replace(/\s?г\.?$/, ''); };
+const MEDIA = [['text','Текст','--m-text'],['photo','Фото','--m-photo'],['voice','Голосовые','--m-voice'],['videoNote','Кружки','--m-vnote'],
+  ['sticker','Стикеры','--m-sticker'],['gif','Гифки','--m-gif'],['video','Видео','--m-video'],['audio','Аудио','--m-other'],['file','Файлы','--m-other'],['other','Другое','--m-other']];
+const WD = ['пн','вт','ср','чт','пт','сб','вс'];
+const ERRORS = {
+  format:'Это не похоже на выгрузку чата. При экспорте выбери формат «Машиночитаемый JSON» и загрузи файл result.json.',
+  parse:'Не получилось прочитать файл как JSON. При экспорте выбери формат «Машиночитаемый JSON», а не HTML.',
+  full:'Это выгрузка всего аккаунта. Нужна выгрузка одного чата: открой чат с именинником и экспортируй историю из него.',
+  group:'Это групповой чат. Сюда нужен личный чат с именинником.',
+  oneSide:'В выгрузке сообщения только от одного человека. Проверь, что выгружен личный чат с именинником.'
+};
+
+let state = null; // {data, info, bId, stats, excl, sample, friendName}
+const freshExcl = () => ({ef:new Set(), eb:new Set(), sf:new Set(), sb:new Set(), words:new Set()});
+
+function load(data, sample){
+  const info = inspect(data);
+  state = {data, info, sample, bId:info.guess, excl:freshExcl()};
+  recompute();
+}
+function recompute(){
+  state.stats = compute(state.data, state.bId);
+  state.excl = freshExcl();
+  state.picked = new Set();
+  state.pickShow = PICK_SHOW;
+  const fr = state.info.authors.find(a => a.id !== state.bId);
+  state.friendName = fr ? fr.name : '';
+  if(!state.sample) $('fname').value = state.friendName;
+  render();
+}
+
+function chipList(listKey, list, title, cls){
+  const ex = state.excl[listKey];
+  const shown = pick(list, ex);
+  const removed = list.filter(x => ex.has(x.key));
+  const chips = shown.length
+    ? shown.map(x => `<span class="chip"><span class="g">${esc(x.d)}</span><span class="cnt">${fmtN(x.n)}</span><button class="x" type="button" data-l="${listKey}" data-k="${esc(x.key)}" aria-label="Убрать ${esc(x.d)}">×</button></span>`).join('')
+    : '<span class="empty">Ничего нет</span>';
+  const rem = removed.length ? `<div class="removed">Убрано: ${removed.map(x => `<button class="restore" type="button" data-r="${listKey}" data-k="${esc(x.key)}">${esc(x.d)} ↺</button>`).join('')}</div>` : '';
+  return `<div class="side"><div class="side-h"><span class="dot ${cls}"></span>${title}</div><div class="chips">${chips}</div>${rem}</div>`;
+}
+
+function wordTop(list){
+  const ex = state.excl.words, shown = pick(list, ex), removed = list.filter(x => ex.has(x.key));
+  const chips = shown.length
+    ? shown.map(x => `<span class="chip"><span>${esc(x.d)}</span><span class="cnt">${fmtN(x.n)}</span><button class="x" type="button" data-l="words" data-k="${esc(x.key)}" aria-label="Убрать ${esc(x.d)}">×</button></span>`).join('')
+    : '<span class="empty">Ничего нет</span>';
+  const rem = removed.length ? `<div class="removed">Убрано: ${removed.map(x => `<button class="restore" type="button" data-r="words" data-k="${esc(x.key)}">${esc(x.d)} ↺</button>`).join('')}</div>` : '';
+  return `<div class="chips">${chips}</div>${rem}`;
+}
+
+function wordPicker(list){
+  const avail = list.filter(x => !state.excl.words.has(x.key));
+  const pool = avail.slice(0, state.pickShow);
+  const full = state.picked.size >= PICK_MAX;
+  const chips = pool.map(x => { const on = state.picked.has(x.key);
+    return `<button class="pick" type="button" data-pick="${esc(x.key)}" aria-pressed="${on}" ${!on && full ? 'disabled' : ''}>${esc(x.d)}<span class="cnt">${fmtN(x.n)}</span></button>`; }).join('');
+  return `<div class="chips">${chips || '<span class="empty">Слов не нашлось</span>'}</div>
+    <div class="row">
+      ${avail.length > pool.length ? `<button class="restore more" type="button" data-more="1">Показать ещё ${Math.min(PICK_SHOW, avail.length - pool.length)}</button>` : ''}
+      <span class="status">Выбрано ${state.picked.size} из ${PICK_MAX}${full ? '. Чтобы выбрать другое, сними отметку с одного из слов' : ''}</span>
+    </div>`;
+}
+
+const plural = (n, one, few, many) => { const t = n % 100, u = n % 10;
+  return (t > 10 && t < 20) ? many : u === 1 ? one : (u >= 2 && u <= 4) ? few : many; };
+function memeSide(m, title, cls, who){
+  const pct = x => Math.round(x * 100) + '%';
+  const head = `<div class="side-h"><span class="dot ${cls}"></span>${title}</div>`;
+  if(!m.count) return `<div class="side meme">${head}<span class="empty">Ни одного разговора, начатого с мема</span></div>`;
+  const every = Math.max(1, Math.round(1 / Math.max(m.ofStarts, 0.001)));
+  const freq = every === 1 ? `Почти каждый разговор, который ${who}` : `Каждый ${every}-й разговор, который ${who}`;
+  const rows = [
+    ['continued', 'Ответ, и завязался разговор', cls === 'f' ? '--friend' : '--bday'],
+    ['oneReply', 'Один ответ, и тишина', '--m-voice'],
+    ['ignored', 'Без ответа', '--m-other']
+  ];
+  return `<div class="side meme">${head}
+    <p class="meme-lead"><span><b>${fmtN(m.count)}</b> ${plural(m.count, 'разговор', 'разговора', 'разговоров')}</span><span class="meme-sub">${freq}</span></p>
+    <div class="outcomes">${rows.map(([k, l, c]) => `<div class="oc"><span>${l}</span><b>${pct(m[k])}</b><div class="meter"><span style="width:${m[k] * 100}%;background:var(${c})"></span></div></div>`).join('')}</div>
+  </div>`;
+}
+
+function gel(arr, cls, labels){
+  const max = Math.max(1, ...arr);
+  const cells = arr.map((v, i) => `<div class="c" title="${labels[i]}: ${fmtN(v)}" style="background:color-mix(in oklab, var(--accent) ${Math.round(v / max * 100)}%, var(--cell))"></div>`).join('');
+  const labs = labels.map(l => `<div class="lab">${l}</div>`).join('');
+  return `<div class="gel ${cls}">${cells}${labs}</div>`;
+}
+
+function render(){
+  const st = state.stats, F = st.sides.friend, B = st.sides.birthday;
+  const bName = esc(state.info.authors.find(a => a.id === state.bId).name);
+  const fLabel = 'Ты', bLabel = bName;
+
+  $('sampleNote').hidden = !state.sample;
+  const who = $('who');
+  if(state.sample){ who.hidden = true; }
+  else {
+    who.hidden = false;
+    who.innerHTML = `<fieldset><legend>Кто из вас именинник?</legend>${state.info.authors.map(a =>
+      `<label><input type="radio" name="bday" id="bday-${esc(a.id)}" value="${esc(a.id)}" ${a.id === state.bId ? 'checked' : ''}> ${esc(a.name)}</label>`).join('')}</fieldset>`;
+  }
+
+  const kpis = [
+    [`${fmtMonth(st.first && st.first.slice(0,7))} — ${fmtMonth(st.last && st.last.slice(0,7))}`, 'период переписки'],
+    [fmtN(st.total), 'сообщений'],
+    [fmtN(st.activeDays), 'дней, когда переписывались'],
+    [fmtN(st.streak), 'дней подряд, рекорд'],
+    [fmtN(st.convos), 'разговоров'],
+  ];
+  if(st.calls) kpis.push([`${fmtN(st.calls)} · ${fmtN(st.callMin)} мин`, 'звонков']);
+
+  const hourLabels = Array.from({length:24}, (_, i) => i % 6 === 0 ? String(i) : '');
+  const hourBlock = `<div class="gel h">${st.hours.map((v, i) => `<div class="c" title="${i}:00 — ${fmtN(v)}" style="background:color-mix(in oklab, var(--accent) ${Math.round(v / Math.max(1, ...st.hours) * 100)}%, var(--cell))"></div>`).join('')}${hourLabels.map(l => `<div class="lab">${l}</div>`).join('')}</div>`;
+
+  const mixTotal = st.total || 1;
+  const mixParts = MEDIA.filter(([k]) => st.media[k] > 0);
+  const mix = mixParts.map(([k, l, c]) => `<span style="width:${st.media[k] / mixTotal * 100}%;background:var(${c})" title="${l}"></span>`).join('');
+  const mixLegend = mixParts.map(([k, l, c]) => `<span><i style="background:var(${c})"></i>${l}<b>${(st.media[k] / mixTotal * 100).toFixed(st.media[k] / mixTotal < 0.01 ? 1 : 0)}%</b></span>`).join('');
+
+  const pct = x => Math.round(x * 100) + '%';
+  $('report').innerHTML = `
+    <div class="kpis">${kpis.map(([v, l]) => `<div class="kpi"><span class="v">${v}</span><span class="l">${l}</span></div>`).join('')}</div>
+
+    <div class="block">
+      <h3>Две стороны</h3>
+      <div class="strand" role="img" aria-label="Доля сообщений: ты ${pct(F.share)}, ${bLabel} ${pct(B.share)}"><span class="f" style="width:${F.share * 100}%"></span><span class="b" style="width:${B.share * 100}%"></span></div>
+      <div class="legend2"><span><span class="dot f"></span>${fLabel} · ${pct(F.share)}</span><span><span class="dot b"></span>${bLabel} · ${pct(B.share)}</span></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th></th><th class="num">${fLabel}</th><th class="num">${bLabel}</th></tr></thead>
+        <tbody>
+          <tr><td>Сообщений</td><td class="num">${fmtN(F.messages)}</td><td class="num">${fmtN(B.messages)}</td></tr>
+          <tr><td>Начинает разговор</td><td class="num">${pct(F.startsConvos)}</td><td class="num">${pct(B.startsConvos)}</td></tr>
+          <tr><td>Медианная длина, символов</td><td class="num">${F.medianLen}</td><td class="num">${B.medianLen}</td></tr>
+          <tr><td>Медианное время ответа, мин</td><td class="num">${F.medianReplyMin}</td><td class="num">${B.medianReplyMin}</td></tr>
+        </tbody></table></div>
+    </div>
+
+    <div class="block">
+      <h3>Когда вы пишете</h3>
+      ${hourBlock}
+      ${gel(st.weekdays, 'w', WD)}
+      <div class="facts">
+        <span>Ночью, с 0 до 6: <b>${pct(st.nightShare)}</b></span>
+        <span>Самый активный месяц: <b>${fmtMonth(st.peakMonth)}</b></span>
+        <span>Медианный ответ: <b>${st.medianReplyMin} мин</b></span>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3>Из чего состоит переписка</h3>
+      <div class="mix">${mix}</div>
+      <div class="mix-legend">${mixLegend}</div>
+    </div>
+
+    <div class="block">
+      <h3>Разговоры, начатые с мема</h3>
+      <p class="hint">Первое сообщение разговора — картинка, видео или гифка. Что было дальше?</p>
+      <div class="pair">${memeSide(st.memeStarts.friend, fLabel, 'f', 'ты начинаешь')}${memeSide(st.memeStarts.birthday, bLabel, 'b', 'начинает ' + bLabel)}</div>
+      <p class="hint">Для сравнения: разговор, начатый с текста, завязывается в <b>${pct(st.textStartsContinued)}</b> случаев.</p>
+    </div>
+
+    <div class="block">
+      <h3>Эмодзи</h3>
+      <div class="pair">${chipList('ef', st.cand.ef, fLabel, 'f')}${chipList('eb', st.cand.eb, bLabel, 'b')}</div>
+    </div>
+
+    <div class="block">
+      <h3>Стикеры, по их эмодзи</h3>
+      <div class="pair">${chipList('sf', st.cand.sf, fLabel, 'f')}${chipList('sb', st.cand.sb, bLabel, 'b')}</div>
+    </div>
+
+    <div class="block">
+      <h3>Самые частые слова</h3>
+      <p class="hint">Эти три попадут в открытку автоматически. Если какое-то не хочется показывать, убери его, и его место займёт следующее.</p>
+      ${wordTop(st.cand.words)}
+    </div>
+
+    <div class="block">
+      <h3>Слова на твой выбор · по желанию</h3>
+      <p class="hint">Отметь до ${PICK_MAX} слов, которые кажутся смешными, неожиданными или очень про вас. Число рядом показывает, сколько раз слово встречалось.</p>
+      ${wordPicker(st.cand.words)}
+    </div>`;
+
+  $('sendLocked').hidden = !state.sample;
+  $('sendBox').hidden = state.sample;
+  updateOut();
+}
+
+function updateOut(){
+  if(!state || state.sample) return;
+  const name = $('fname').value.trim() || state.friendName;
+  $('out').value = JSON.stringify(buildGenome(state.stats, state.excl, name, state.picked));
+  $('copyStatus').textContent = '';
+}
+
+$('report').addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  let refocus = null;
+  if(b.dataset.more){ state.pickShow += PICK_SHOW; render(); return; }
+  if(b.dataset.pick){ const k = b.dataset.pick; if(state.picked.has(k)) state.picked.delete(k); else if(state.picked.size < PICK_MAX) state.picked.add(k); refocus = k; }
+  else if(b.dataset.l){ state.excl[b.dataset.l].add(b.dataset.k); if(b.dataset.l === 'words') state.picked.delete(b.dataset.k); }
+  else if(b.dataset.r){ state.excl[b.dataset.r].delete(b.dataset.k); }
+  else return;
+  render();
+  if(refocus){ const el = [...document.querySelectorAll('[data-pick]')].find(x => x.dataset.pick === refocus); if(el) el.focus(); }
+});
+$('who').addEventListener('change', e => { if(e.target.name === 'bday'){ state.bId = e.target.value; recompute(); } });
+$('fname').addEventListener('input', updateOut);
+$('copy').addEventListener('click', () => {
+  const v = $('out').value;
+  const fallback = () => { $('out').focus(); $('out').select(); $('copyStatus').textContent = 'Текст выделен, нажми Ctrl+C или ⌘C'; };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(v).then(() => { $('copyStatus').textContent = 'Скопировано'; }, fallback);
+  } else fallback();
+});
+
+async function handleFile(file){
+  const err = $('err'); err.hidden = true;
+  if(!file) return;
+  $('dropStatus').textContent = `Читаю ${file.name}…`;
+  await new Promise(r => setTimeout(r, 30));
+  let data;
+  try { data = JSON.parse(await file.text()); }
+  catch(_){ err.textContent = ERRORS.parse; err.hidden = false; $('dropStatus').textContent = 'Файл читается только на этом компьютере'; return; }
+  try {
+    load(data, false);
+    $('dropStatus').textContent = `Загружено: ${file.name}, ${fmtN(state.stats.total)} сообщений`;
+    $('s3').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'});
+  } catch(e){
+    err.textContent = ERRORS[e.code] || ('Что-то пошло не так: ' + e.message);
+    err.hidden = false;
+    $('dropStatus').textContent = 'Файл читается только на этом компьютере';
+  }
+}
+$('file').addEventListener('change', e => handleFile(e.target.files[0]));
+const drop = $('drop');
+['dragenter','dragover'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add('over'); }));
+['dragleave','drop'].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove('over'); }));
+drop.addEventListener('drop', e => handleFile(e.dataTransfer.files[0]));
+
+load(makeSample(), true);
+</script>
+
+</body></html>
