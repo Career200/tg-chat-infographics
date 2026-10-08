@@ -1,0 +1,3 @@
+# Exported chats are private data; never commit them
+result*.json
+*.json

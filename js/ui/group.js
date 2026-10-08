@@ -53,7 +53,7 @@ function bars(items, fmt, opts = {}){
       <span class="bar-v">${fmt(x.v, x)}</span></div>`).join('')}</div>`;
 }
 function matrix(M, rowHead, colHead){
-  const n = M.length, max = Math.max(1, ...M.flat());
+  const max = M.reduce((a, row) => row.reduce((b, v) => v > b ? v : b, a), 1); // no spread: N*N args overflow the stack on big chats
   const head = `<tr><th class="corner">${rowHead}</th>${S.st.people.map((_, j) => `<th class="mh" title="${pname(j)}">${dot(j)}<span>${esc(S.st.people[j].name.split(' ')[0])}</span></th>`).join('')}</tr>`;
   const rows = M.map((row, i) => `<tr><th class="rh">${who(i)}</th>${row.map((v, j) => i === j ? '<td class="mc self"></td>'
     : `<td class="mc" style="${heat(v, max)}" title="${pname(i)} → ${pname(j)}: ${fmtN(v)}"><span>${v ? fmtN(v) : ''}</span></td>`).join('')}</tr>`).join('');
